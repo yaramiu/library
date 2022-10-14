@@ -24,26 +24,54 @@ function addBookToLibrary() {
   const userBookTitleInput = prompt(
     "What is the title of the book you want to add?"
   );
+  let hasCancelled = checkUserCancellation(userBookTitleInput);
+  if (hasCancelled) {
+    return;
+  }
 
   let userBookAuthorInput = prompt("Who is the author of that book?");
+  hasCancelled = checkUserCancellation(userBookAuthorInput);
+  if (hasCancelled) {
+    return;
+  }
   while (!isBookAuthorInputValid(userBookAuthorInput)) {
     userBookAuthorInput = prompt(
       "That is not a valid author name. Please only use alphabetical characters when inputting the author's name"
     );
+    hasCancelled = checkUserCancellation(userBookAuthorInput);
+    if (hasCancelled) {
+      return;
+    }
   }
 
   let userBookPagesInput = prompt("How many pages does it have?");
+  hasCancelled = checkUserCancellation(userBookPagesInput);
+  if (hasCancelled) {
+    return;
+  }
   while (!isBookPagesInputValid(userBookPagesInput)) {
     userBookPagesInput = prompt(
       "That is not a valid page number. Please re-enter the number of pages the book has"
     );
+    hasCancelled = checkUserCancellation(userBookPagesInput);
+    if (hasCancelled) {
+      return;
+    }
   }
 
   let userBookReadInput = prompt("Did you read this book yet?");
+  hasCancelled = checkUserCancellation(userBookReadInput);
+  if (hasCancelled) {
+    return;
+  }
   while (!isBookReadInputValid(userBookReadInput)) {
     userBookReadInput = prompt(
       "That is not a valid answer. Please enter Yes/yes/Y/y or No/no/N/n"
     );
+    hasCancelled = checkUserCancellation(userBookReadInput);
+    if (hasCancelled) {
+      return;
+    }
   }
 
   let hasUserReadBook;
@@ -117,6 +145,24 @@ function displayMyLibrary() {
 
     booksContainerDiv.appendChild(bookDiv);
   });
+}
+
+const newBookButton = document.querySelector(".new-book-button");
+newBookButton.addEventListener("click", () => {
+  addBookToLibrary();
+  clearScreen();
+  displayMyLibrary();
+});
+
+function checkUserCancellation(userInput) {
+  return userInput === null;
+}
+
+function clearScreen() {
+  const bookContainerDiv = document.querySelector(".books-container");
+  while (bookContainerDiv.firstChild) {
+    bookContainerDiv.removeChild(bookContainerDiv.firstChild);
+  }
 }
 
 let kimetsuNoYaibaVolume1 = new Book(

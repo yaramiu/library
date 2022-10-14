@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+
 .books-container {
   display: grid;
   grid-template-columns: repeat(4, 20vw);
@@ -11,4 +17,21 @@
   height: auto;
   background-color: lightblue;
   text-align: center;
+}
+
+.new-book-button {
+  position: fixed;
+  bottom: 2vw;
+  right: 2vw;
+  background-color: blue;
+  color: white;
+  border-radius: 8px;
+  width: 10vw;
+  height: 5vh;
+  font-weight: bold;
+  border: none;
+}
+
+.new-book-button:active {
+  background-color: darkblue;
 }
