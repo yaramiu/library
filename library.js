@@ -87,4 +87,72 @@ function isBookReadInputValid(userBookReadInput) {
   );
 }
 
-addBookToLibrary();
+function displayMyLibrary() {
+  const booksContainerDiv = document.querySelector(".books-container");
+
+  myLibrary.forEach((book) => {
+    const bookDiv = document.createElement("div");
+    bookDiv.classList.add("book");
+
+    const titleHeader = document.createElement("h4");
+    titleHeader.classList.add("title");
+    titleHeader.textContent = book.title;
+    bookDiv.appendChild(titleHeader);
+
+    const authorParagraph = document.createElement("p");
+    authorParagraph.classList.add("author");
+    authorParagraph.textContent = book.author;
+    bookDiv.appendChild(authorParagraph);
+
+    const pagesParagraph = document.createElement("p");
+    pagesParagraph.classList.add("pages");
+    pagesParagraph.textContent = book.pages.toString();
+    bookDiv.appendChild(pagesParagraph);
+
+    const readingStatusParagraph = document.createElement("p");
+    readingStatusParagraph.classList.add("reading-status");
+    const readBookString = book.read ? "read" : "not read";
+    readingStatusParagraph.textContent = readBookString;
+    bookDiv.appendChild(readingStatusParagraph);
+
+    booksContainerDiv.appendChild(bookDiv);
+  });
+}
+
+let kimetsuNoYaibaVolume1 = new Book(
+  "Demon Slayer: Kimetsu no Yaiba, Vol. 1",
+  "Koyoharu Gotouge",
+  192,
+  true
+);
+let eightySixVolume4 = new Book(
+  "86--EIGHTY-SIX, Vol. 4",
+  "Asato Asato",
+  228,
+  false
+);
+let eightySixVolume5 = new Book(
+  "86--EIGHTY-SIX, Vol. 5",
+  "Asato Asato",
+  265,
+  false
+);
+let eightySixVolume6 = new Book(
+  "86--EIGHTY-SIX, Vol. 6",
+  "Asato Asato",
+  262,
+  false
+);
+let kimetsuNoYaibaVolume2 = new Book(
+  "Demon Slayer: Kimetsu No Yaiba, Vol. 2",
+  "Koyoharu Gotouge",
+  193,
+  true
+);
+myLibrary.push(kimetsuNoYaibaVolume1);
+myLibrary.push(eightySixVolume4);
+myLibrary.push(eightySixVolume5);
+myLibrary.push(eightySixVolume6);
+myLibrary.push(kimetsuNoYaibaVolume2);
+
+displayMyLibrary();
