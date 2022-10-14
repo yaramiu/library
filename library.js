@@ -5,6 +5,7 @@ function Book(title, author, pages, read) {
   this.author = author;
   this.pages = pages;
   this.read = read;
+  this.indexInLibrary;
 }
 
 Book.prototype.info = function() {
@@ -97,6 +98,7 @@ function addBookToLibrary() {
     Number(userBookPagesInput),
     hasUserReadBook
   );
+  book.indexInLibrary = myLibrary.length;
   myLibrary.push(book);
 }
 
@@ -116,8 +118,6 @@ function isBookReadInputValid(userBookReadInput) {
 }
 
 function displayMyLibrary() {
-  const booksContainerDiv = document.querySelector(".books-container");
-
   myLibrary.forEach((book) => {
     const bookDiv = document.createElement("div");
     bookDiv.classList.add("book");
@@ -143,9 +143,18 @@ function displayMyLibrary() {
     readingStatusParagraph.textContent = readBookString;
     bookDiv.appendChild(readingStatusParagraph);
 
+    const deleteBookButton = document.createElement("button");
+    deleteBookButton.setAttribute("type", "button");
+    deleteBookButton.classList.add("delete-book-button");
+    deleteBookButton.textContent = "x";
+    initializeDeleteBookButton(deleteBookButton, book);
+    bookDiv.appendChild(deleteBookButton);
+
     booksContainerDiv.appendChild(bookDiv);
   });
 }
+
+const booksContainerDiv = document.querySelector(".books-container");
 
 const newBookButton = document.querySelector(".new-book-button");
 newBookButton.addEventListener("click", () => {
@@ -153,6 +162,22 @@ newBookButton.addEventListener("click", () => {
   clearScreen();
   displayMyLibrary();
 });
+
+function initializeDeleteBookButton(deleteBookButton, bookToDelete) {
+  deleteBookButton.addEventListener("click", () => {
+    myLibrary.splice(bookToDelete.indexInLibrary, 1);
+    updateBookIndexes();
+    clearScreen();
+    displayMyLibrary();
+  });
+}
+
+function updateBookIndexes() {
+  for (let index = 0; index < myLibrary.length; index++) {
+    const book = myLibrary[index];
+    book.indexInLibrary = index;
+  }
+}
 
 function checkUserCancellation(userInput) {
   return userInput === null;
@@ -171,30 +196,35 @@ let kimetsuNoYaibaVolume1 = new Book(
   192,
   true
 );
+kimetsuNoYaibaVolume1.indexInLibrary = 0;
 let eightySixVolume4 = new Book(
   "86--EIGHTY-SIX, Vol. 4",
   "Asato Asato",
   228,
   false
 );
+eightySixVolume4.indexInLibrary = 1;
 let eightySixVolume5 = new Book(
   "86--EIGHTY-SIX, Vol. 5",
   "Asato Asato",
   265,
   false
 );
+eightySixVolume5.indexInLibrary = 2;
 let eightySixVolume6 = new Book(
   "86--EIGHTY-SIX, Vol. 6",
   "Asato Asato",
   262,
   false
 );
+eightySixVolume6.indexInLibrary = 3;
 let kimetsuNoYaibaVolume2 = new Book(
-  "Demon Slayer: Kimetsu No Yaiba, Vol. 2",
+  "Demon Slayer: Kimetsu no Yaiba, Vol. 2",
   "Koyoharu Gotouge",
   193,
   true
 );
+kimetsuNoYaibaVolume2.indexInLibrary = 4;
 myLibrary.push(kimetsuNoYaibaVolume1);
 myLibrary.push(eightySixVolume4);
 myLibrary.push(eightySixVolume5);

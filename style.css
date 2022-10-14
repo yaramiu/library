@@ -19,9 +19,14 @@ body {
   text-align: center;
 }
 
+.title {
+  overflow: auto;
+  height: 40px;
+}
+
 .new-book-button {
   position: fixed;
-  bottom: 2vw;
+  bottom: 4vh;
   right: 2vw;
   background-color: blue;
   color: white;
@@ -32,6 +37,25 @@ body {
   border: none;
 }
 
+.new-book-button:hover {
+  width: 11vw;
+  height: 5.5vh;
+}
+
 .new-book-button:active {
   background-color: darkblue;
+}
+
+.delete-book-button {
+  background-color: red;
+  color: white;
+  border: none;
+  position: relative;
+  bottom: 11.75rem;
+  left: 9.1vw;
+  font-weight: bold;
+}
+
+.delete-book-button:hover {
+  background-color: darkred;
 }
