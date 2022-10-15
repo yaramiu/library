@@ -21,6 +21,10 @@ Book.prototype.info = function() {
   );
 };
 
+Book.prototype.toggleReadingStatus = function() {
+  this.read = !this.read;
+};
+
 function addBookToLibrary() {
   const userBookTitleInput = prompt(
     "What is the title of the book you want to add?"
@@ -137,11 +141,21 @@ function displayMyLibrary() {
     pagesParagraph.textContent = book.pages.toString();
     bookDiv.appendChild(pagesParagraph);
 
+    const readingStatusContainer = document.createElement("div");
+    readingStatusContainer.classList.add("reading-status-container");
+
     const readingStatusParagraph = document.createElement("p");
     readingStatusParagraph.classList.add("reading-status");
     const readBookString = book.read ? "read" : "not read";
     readingStatusParagraph.textContent = readBookString;
-    bookDiv.appendChild(readingStatusParagraph);
+    readingStatusContainer.appendChild(readingStatusParagraph);
+
+    const toggleReadingStatusButton = createToggleReadingStatusButton(
+      book,
+      readingStatusParagraph
+    );
+    readingStatusContainer.appendChild(toggleReadingStatusButton);
+    bookDiv.appendChild(readingStatusContainer);
 
     const deleteBookButton = document.createElement("button");
     deleteBookButton.setAttribute("type", "button");
@@ -170,6 +184,35 @@ function initializeDeleteBookButton(deleteBookButton, bookToDelete) {
     clearScreen();
     displayMyLibrary();
   });
+}
+
+function createToggleReadingStatusButton(book, readingStatusParagraph) {
+  const toggleReadingStatusButton = document.createElement("button");
+  toggleReadingStatusButton.classList.add("toggle-reading-status-button");
+
+  let hasUserReadBook = book.read;
+  if (!hasUserReadBook) {
+    toggleReadingStatusButton.classList.add("not-read");
+  } else {
+    toggleReadingStatusButton.classList.add("read");
+  }
+
+  toggleReadingStatusButton.addEventListener("click", () => {
+    book.toggleReadingStatus();
+
+    hasUserReadBook = book.read;
+    if (!hasUserReadBook) {
+      toggleReadingStatusButton.classList.remove("read");
+      toggleReadingStatusButton.classList.add("not-read");
+    } else {
+      toggleReadingStatusButton.classList.remove("not-read");
+      toggleReadingStatusButton.classList.add("read");
+    }
+
+    let readBookString = book.read ? "read" : "not read";
+    readingStatusParagraph.textContent = readBookString;
+  });
+  return toggleReadingStatusButton;
 }
 
 function updateBookIndexes() {

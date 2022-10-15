@@ -51,11 +51,27 @@ body {
   color: white;
   border: none;
   position: relative;
-  bottom: 11.75rem;
+  bottom: 13.6rem;
   left: 9.1vw;
   font-weight: bold;
 }
 
 .delete-book-button:hover {
   background-color: darkred;
+}
+
+.toggle-reading-status-button.read,
+.toggle-reading-status-button.not-read {
+  width: 2vw;
+  height: 4vh;
+  border-radius: 8px;
+  border: none;
+}
+
+.toggle-reading-status-button.read {
+  background: url(./icons/toggle-switch.svg);
+}
+
+.toggle-reading-status-button.not-read {
+  background: url(./icons/toggle-switch-off.svg);
 }
