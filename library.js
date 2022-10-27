@@ -1,29 +1,32 @@
 let myLibrary = [];
 
-function Book(title, author, pages, read) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.read = read;
-  this.indexInLibrary;
+class Book {
+  indexInLibrary;
+
+  constructor(title, author, pages, read) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.read = read;
+  }
+
+  info() {
+    const readBookString = this.read ? "read" : "not read yet";
+    return (
+      this.title +
+      " by " +
+      this.author +
+      ", " +
+      this.pages +
+      " pages, " +
+      readBookString
+    );
+  }
+
+  toggleReadingStatus() {
+    this.read = !this.read;
+  }
 }
-
-Book.prototype.info = function() {
-  const readBookString = this.read ? "read" : "not read yet";
-  return (
-    this.title +
-    " by " +
-    this.author +
-    ", " +
-    this.pages +
-    " pages, " +
-    readBookString
-  );
-};
-
-Book.prototype.toggleReadingStatus = function() {
-  this.read = !this.read;
-};
 
 function addBookToLibrary() {
   const userBookTitleInput = prompt(
