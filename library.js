@@ -114,7 +114,7 @@ class Library {
     this.bookCollection.push(book);
   }
 
-  display() {
+  displayBooks() {
     this.bookCollection.forEach((book) => {
       const bookDiv = document.createElement("div");
       bookDiv.classList.add("book");
@@ -195,16 +195,16 @@ const booksContainerDiv = document.querySelector(".books-container");
 const newBookButton = document.querySelector(".new-book-button");
 newBookButton.addEventListener("click", () => {
   library.addBook();
-  clearScreen();
-  library.display();
+  screen.clear();
+  library.displayBooks();
 });
 
 function initializeDeleteBookButton(deleteBookButton, bookToDelete) {
   deleteBookButton.addEventListener("click", () => {
     library.bookCollection.splice(bookToDelete.indexInLibrary, 1);
     library.updateBookIndexes();
-    clearScreen();
-    library.display();
+    screen.clear();
+    library.displayBooks();
   });
 }
 
@@ -237,14 +237,17 @@ function createToggleReadingStatusButton(book, readingStatusParagraph) {
   return toggleReadingStatusButton;
 }
 
-function clearScreen() {
-  const bookContainerDiv = document.querySelector(".books-container");
-  while (bookContainerDiv.firstChild) {
-    bookContainerDiv.removeChild(bookContainerDiv.firstChild);
+class Screen {
+  clear() {
+    const bookContainerDiv = document.querySelector(".books-container");
+    while (bookContainerDiv.firstChild) {
+      bookContainerDiv.removeChild(bookContainerDiv.firstChild);
+    }
   }
 }
 
 let library = new Library([]);
+let screen = new Screen();
 
 let kimetsuNoYaibaVolume1 = new Book(
   "Demon Slayer: Kimetsu no Yaiba, Vol. 1",
@@ -288,4 +291,4 @@ library.bookCollection.push(eightySixVolume5);
 library.bookCollection.push(eightySixVolume6);
 library.bookCollection.push(kimetsuNoYaibaVolume2);
 
-library.display();
+library.displayBooks();
