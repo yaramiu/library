@@ -160,6 +160,13 @@ class Library {
       booksContainerDiv.appendChild(bookDiv);
     });
   }
+
+  updateBookIndexes() {
+    for (let index = 0; index < library.bookCollection.length; index++) {
+      const book = this.bookCollection[index];
+      book.indexInLibrary = index;
+    }
+  }
 }
 
 class InputValidator {
@@ -183,13 +190,6 @@ class InputValidator {
   }
 }
 
-function updateBookIndexes() {
-  for (let index = 0; index < library.bookCollection.length; index++) {
-    const book = library.bookCollection[index];
-    book.indexInLibrary = index;
-  }
-}
-
 const booksContainerDiv = document.querySelector(".books-container");
 
 const newBookButton = document.querySelector(".new-book-button");
@@ -202,7 +202,7 @@ newBookButton.addEventListener("click", () => {
 function initializeDeleteBookButton(deleteBookButton, bookToDelete) {
   deleteBookButton.addEventListener("click", () => {
     library.bookCollection.splice(bookToDelete.indexInLibrary, 1);
-    updateBookIndexes();
+    library.updateBookIndexes();
     clearScreen();
     library.display();
   });
@@ -281,6 +281,7 @@ let kimetsuNoYaibaVolume2 = new Book(
   true
 );
 kimetsuNoYaibaVolume2.indexInLibrary = 4;
+
 library.bookCollection.push(kimetsuNoYaibaVolume1);
 library.bookCollection.push(eightySixVolume4);
 library.bookCollection.push(eightySixVolume5);
