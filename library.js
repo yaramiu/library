@@ -143,10 +143,11 @@ class Library {
       readingStatusParagraph.textContent = readBookString;
       readingStatusContainerDiv.appendChild(readingStatusParagraph);
 
-      const toggleReadingStatusButton = createToggleReadingStatusButton(
-        book,
-        readingStatusParagraph
-      );
+      const toggleReadingStatusButton =
+        buttonHelper.createToggleReadingStatusButton(
+          book,
+          readingStatusParagraph
+        );
       readingStatusContainerDiv.appendChild(toggleReadingStatusButton);
       bookDiv.appendChild(readingStatusContainerDiv);
 
@@ -154,7 +155,7 @@ class Library {
       deleteBookButton.setAttribute("type", "button");
       deleteBookButton.classList.add("delete-book-button");
       deleteBookButton.textContent = "x";
-      initializeDeleteBookButton(deleteBookButton, book);
+      buttonHelper.initializeDeleteBookButton(deleteBookButton, book);
       bookDiv.appendChild(deleteBookButton);
 
       booksContainerDiv.appendChild(bookDiv);
@@ -190,51 +191,53 @@ class InputValidator {
   }
 }
 
-const booksContainerDiv = document.querySelector(".books-container");
-
-const newBookButton = document.querySelector(".new-book-button");
-newBookButton.addEventListener("click", () => {
-  library.addBook();
-  screen.clear();
-  library.displayBooks();
-});
-
-function initializeDeleteBookButton(deleteBookButton, bookToDelete) {
-  deleteBookButton.addEventListener("click", () => {
-    library.bookCollection.splice(bookToDelete.indexInLibrary, 1);
-    library.updateBookIndexes();
-    screen.clear();
-    library.displayBooks();
-  });
-}
-
-function createToggleReadingStatusButton(book, readingStatusParagraph) {
-  const toggleReadingStatusButton = document.createElement("button");
-  toggleReadingStatusButton.classList.add("toggle-reading-status-button");
-
-  let hasUserReadBook = book.read;
-  if (!hasUserReadBook) {
-    toggleReadingStatusButton.classList.add("not-read");
-  } else {
-    toggleReadingStatusButton.classList.add("read");
+class ButtonHelper {
+  constructor() {
+    const newBookButton = document.querySelector(".new-book-button");
+    newBookButton.addEventListener("click", () => {
+      library.addBook();
+      screen.clear();
+      library.displayBooks();
+    });
   }
 
-  toggleReadingStatusButton.addEventListener("click", () => {
-    book.toggleReadingStatus();
+  initializeDeleteBookButton(deleteBookButton, bookToDelete) {
+    deleteBookButton.addEventListener("click", () => {
+      library.bookCollection.splice(bookToDelete.indexInLibrary, 1);
+      library.updateBookIndexes();
+      screen.clear();
+      library.displayBooks();
+    });
+  }
 
-    hasUserReadBook = book.read;
+  createToggleReadingStatusButton(book, readingStatusParagraph) {
+    const toggleReadingStatusButton = document.createElement("button");
+    toggleReadingStatusButton.classList.add("toggle-reading-status-button");
+
+    let hasUserReadBook = book.read;
     if (!hasUserReadBook) {
-      toggleReadingStatusButton.classList.remove("read");
       toggleReadingStatusButton.classList.add("not-read");
     } else {
-      toggleReadingStatusButton.classList.remove("not-read");
       toggleReadingStatusButton.classList.add("read");
     }
 
-    let readBookString = book.read ? "read" : "not read";
-    readingStatusParagraph.textContent = readBookString;
-  });
-  return toggleReadingStatusButton;
+    toggleReadingStatusButton.addEventListener("click", () => {
+      book.toggleReadingStatus();
+
+      hasUserReadBook = book.read;
+      if (!hasUserReadBook) {
+        toggleReadingStatusButton.classList.remove("read");
+        toggleReadingStatusButton.classList.add("not-read");
+      } else {
+        toggleReadingStatusButton.classList.remove("not-read");
+        toggleReadingStatusButton.classList.add("read");
+      }
+
+      let readBookString = book.read ? "read" : "not read";
+      readingStatusParagraph.textContent = readBookString;
+    });
+    return toggleReadingStatusButton;
+  }
 }
 
 class Screen {
@@ -246,8 +249,11 @@ class Screen {
   }
 }
 
+const booksContainerDiv = document.querySelector(".books-container");
+
 let library = new Library([]);
 let screen = new Screen();
+let buttonHelper = new ButtonHelper();
 
 let kimetsuNoYaibaVolume1 = new Book(
   "Demon Slayer: Kimetsu no Yaiba, Vol. 1",
