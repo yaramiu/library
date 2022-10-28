@@ -1,7 +1,5 @@
-let myLibrary = [];
-
 class Book {
-  indexInLibrary;
+  indexInLibrary = 0;
 
   constructor(title, author, pages, read) {
     this.title = title;
@@ -28,164 +26,185 @@ class Book {
   }
 }
 
-function addBookToLibrary() {
-  const userBookTitleInput = prompt(
-    "What is the title of the book you want to add?"
-  );
-  let hasCancelled = checkUserCancellation(userBookTitleInput);
-  if (hasCancelled) {
-    return;
+class Library {
+  constructor(bookCollection) {
+    this.bookCollection = bookCollection;
   }
 
-  let userBookAuthorInput = prompt("Who is the author of that book?");
-  hasCancelled = checkUserCancellation(userBookAuthorInput);
-  if (hasCancelled) {
-    return;
-  }
-  while (!isBookAuthorInputValid(userBookAuthorInput)) {
-    userBookAuthorInput = prompt(
-      "That is not a valid author name. Please only use alphabetical characters when inputting the author's name"
+  addBook() {
+    const inputValidator = new InputValidator();
+
+    const userBookTitleInput = prompt(
+      "What is the title of the book you want to add?"
     );
-    hasCancelled = checkUserCancellation(userBookAuthorInput);
+    let hasCancelled = inputValidator.checkUserCancellation(userBookTitleInput);
     if (hasCancelled) {
       return;
     }
-  }
 
-  let userBookPagesInput = prompt("How many pages does it have?");
-  hasCancelled = checkUserCancellation(userBookPagesInput);
-  if (hasCancelled) {
-    return;
-  }
-  while (!isBookPagesInputValid(userBookPagesInput)) {
-    userBookPagesInput = prompt(
-      "That is not a valid page number. Please re-enter the number of pages the book has"
-    );
-    hasCancelled = checkUserCancellation(userBookPagesInput);
+    let userBookAuthorInput = prompt("Who is the author of that book?");
+    hasCancelled = inputValidator.checkUserCancellation(userBookAuthorInput);
     if (hasCancelled) {
       return;
     }
-  }
+    while (!inputValidator.isBookAuthorInputValid(userBookAuthorInput)) {
+      userBookAuthorInput = prompt(
+        "That is not a valid author name. Please use only alphabetical characters when inputting the author's name"
+      );
+      hasCancelled = inputValidator.checkUserCancellation(userBookAuthorInput);
+      if (hasCancelled) {
+        return;
+      }
+    }
 
-  let userBookReadInput = prompt("Did you read this book yet?");
-  hasCancelled = checkUserCancellation(userBookReadInput);
-  if (hasCancelled) {
-    return;
-  }
-  while (!isBookReadInputValid(userBookReadInput)) {
-    userBookReadInput = prompt(
-      "That is not a valid answer. Please enter Yes/yes/Y/y or No/no/N/n"
-    );
-    hasCancelled = checkUserCancellation(userBookReadInput);
+    let userBookPagesInput = prompt("How many pages does it have?");
+    hasCancelled = inputValidator.checkUserCancellation(userBookPagesInput);
     if (hasCancelled) {
       return;
     }
-  }
+    while (!inputValidator.isBookPagesInputValid(userBookPagesInput)) {
+      userBookPagesInput = prompt(
+        "That is not a valid page number. Please re-enter the number of pages the book has"
+      );
+      hasCancelled = inputValidator.checkUserCancellation(userBookPagesInput);
+      if (hasCancelled) {
+        return;
+      }
+    }
 
-  let hasUserReadBook;
-  if (
-    userBookReadInput === "Yes" ||
-    userBookReadInput === "yes" ||
-    userBookReadInput === "Y" ||
-    userBookReadInput === "y"
-  ) {
-    hasUserReadBook = true;
-  } else if (
-    userBookReadInput === "No" ||
-    userBookReadInput === "no" ||
-    userBookReadInput === "N" ||
-    userBookReadInput === "n"
-  ) {
-    hasUserReadBook = false;
-  }
+    let userBookReadInput = prompt("Did you read this book yet?");
+    hasCancelled = inputValidator.checkUserCancellation(userBookReadInput);
+    if (hasCancelled) {
+      return;
+    }
+    while (!inputValidator.isBookReadInputValid(userBookReadInput)) {
+      userBookReadInput = prompt(
+        "That is not a valid answer. Please enter Yes/yes/Y/y or No/no/N/n"
+      );
+      hasCancelled = inputValidator.checkUserCancellation(userBookReadInput);
+      if (hasCancelled) {
+        return;
+      }
+    }
 
-  const book = new Book(
-    userBookTitleInput,
-    userBookAuthorInput,
-    Number(userBookPagesInput),
-    hasUserReadBook
-  );
-  book.indexInLibrary = myLibrary.length;
-  myLibrary.push(book);
-}
+    let hasUserReadBook;
+    if (
+      userBookReadInput === "Yes" ||
+      userBookReadInput === "yes" ||
+      userBookReadInput === "Y" ||
+      userBookReadInput === "y"
+    ) {
+      hasUserReadBook = true;
+    } else if (
+      userBookReadInput === "No" ||
+      userBookReadInput === "no" ||
+      userBookReadInput === "N" ||
+      userBookReadInput === "n"
+    ) {
+      hasUserReadBook = false;
+    }
 
-function isBookAuthorInputValid(userBookAuthorInput) {
-  return userBookAuthorInput.match(/^[A-Za-z ]+$/);
-}
-
-function isBookPagesInputValid(userBookPagesInput) {
-  return userBookPagesInput.match(/^[0-9]+$/);
-}
-
-function isBookReadInputValid(userBookReadInput) {
-  return (
-    userBookReadInput.match(/^[Yy](es)?$/) ||
-    userBookReadInput.match(/^[Nn]o?$/)
-  );
-}
-
-function displayMyLibrary() {
-  myLibrary.forEach((book) => {
-    const bookDiv = document.createElement("div");
-    bookDiv.classList.add("book");
-
-    const titleHeader = document.createElement("h4");
-    titleHeader.classList.add("title");
-    titleHeader.textContent = book.title;
-    bookDiv.appendChild(titleHeader);
-
-    const authorParagraph = document.createElement("p");
-    authorParagraph.classList.add("author");
-    authorParagraph.textContent = book.author;
-    bookDiv.appendChild(authorParagraph);
-
-    const pagesParagraph = document.createElement("p");
-    pagesParagraph.classList.add("pages");
-    pagesParagraph.textContent = book.pages.toString();
-    bookDiv.appendChild(pagesParagraph);
-
-    const readingStatusContainer = document.createElement("div");
-    readingStatusContainer.classList.add("reading-status-container");
-
-    const readingStatusParagraph = document.createElement("p");
-    readingStatusParagraph.classList.add("reading-status");
-    const readBookString = book.read ? "read" : "not read";
-    readingStatusParagraph.textContent = readBookString;
-    readingStatusContainer.appendChild(readingStatusParagraph);
-
-    const toggleReadingStatusButton = createToggleReadingStatusButton(
-      book,
-      readingStatusParagraph
+    const book = new Book(
+      userBookTitleInput,
+      userBookAuthorInput,
+      Number(userBookPagesInput),
+      hasUserReadBook
     );
-    readingStatusContainer.appendChild(toggleReadingStatusButton);
-    bookDiv.appendChild(readingStatusContainer);
+    book.indexInLibrary = this.bookCollection.length;
+    this.bookCollection.push(book);
+  }
 
-    const deleteBookButton = document.createElement("button");
-    deleteBookButton.setAttribute("type", "button");
-    deleteBookButton.classList.add("delete-book-button");
-    deleteBookButton.textContent = "x";
-    initializeDeleteBookButton(deleteBookButton, book);
-    bookDiv.appendChild(deleteBookButton);
+  display() {
+    this.bookCollection.forEach((book) => {
+      const bookDiv = document.createElement("div");
+      bookDiv.classList.add("book");
 
-    booksContainerDiv.appendChild(bookDiv);
-  });
+      const titleHeader = document.createElement("h4");
+      titleHeader.classList.add("title");
+      titleHeader.textContent = book.title;
+      bookDiv.appendChild(titleHeader);
+
+      const authorParagraph = document.createElement("p");
+      authorParagraph.classList.add("author");
+      authorParagraph.textContent = book.author;
+      bookDiv.appendChild(authorParagraph);
+
+      const pagesParagraph = document.createElement("p");
+      pagesParagraph.classList.add("pages");
+      pagesParagraph.textContent = book.pages.toString();
+      bookDiv.appendChild(pagesParagraph);
+
+      const readingStatusContainerDiv = document.createElement("div");
+      readingStatusContainerDiv.classList.add("reading-status-container");
+
+      const readingStatusParagraph = document.createElement("p");
+      readingStatusParagraph.classList.add("reading-status");
+      const readBookString = book.read ? "read" : "not read";
+      readingStatusParagraph.textContent = readBookString;
+      readingStatusContainerDiv.appendChild(readingStatusParagraph);
+
+      const toggleReadingStatusButton = createToggleReadingStatusButton(
+        book,
+        readingStatusParagraph
+      );
+      readingStatusContainerDiv.appendChild(toggleReadingStatusButton);
+      bookDiv.appendChild(readingStatusContainerDiv);
+
+      const deleteBookButton = document.createElement("button");
+      deleteBookButton.setAttribute("type", "button");
+      deleteBookButton.classList.add("delete-book-button");
+      deleteBookButton.textContent = "x";
+      initializeDeleteBookButton(deleteBookButton, book);
+      bookDiv.appendChild(deleteBookButton);
+
+      booksContainerDiv.appendChild(bookDiv);
+    });
+  }
+}
+
+class InputValidator {
+  isBookAuthorInputValid(userBookAuthorInput) {
+    return userBookAuthorInput.match(/^[A-Za-z ]+$/);
+  }
+
+  isBookPagesInputValid(userBookPagesInput) {
+    return userBookPagesInput.match(/^[0-9]+$/);
+  }
+
+  isBookReadInputValid(userBookReadInput) {
+    return (
+      userBookReadInput.match(/^[Yy](es)?$/) ||
+      userBookReadInput.match(/^[Nn]o?$/)
+    );
+  }
+
+  checkUserCancellation(userInput) {
+    return userInput === null;
+  }
+}
+
+function updateBookIndexes() {
+  for (let index = 0; index < library.bookCollection.length; index++) {
+    const book = library.bookCollection[index];
+    book.indexInLibrary = index;
+  }
 }
 
 const booksContainerDiv = document.querySelector(".books-container");
 
 const newBookButton = document.querySelector(".new-book-button");
 newBookButton.addEventListener("click", () => {
-  addBookToLibrary();
+  library.addBook();
   clearScreen();
-  displayMyLibrary();
+  library.display();
 });
 
 function initializeDeleteBookButton(deleteBookButton, bookToDelete) {
   deleteBookButton.addEventListener("click", () => {
-    myLibrary.splice(bookToDelete.indexInLibrary, 1);
+    library.bookCollection.splice(bookToDelete.indexInLibrary, 1);
     updateBookIndexes();
     clearScreen();
-    displayMyLibrary();
+    library.display();
   });
 }
 
@@ -218,23 +237,14 @@ function createToggleReadingStatusButton(book, readingStatusParagraph) {
   return toggleReadingStatusButton;
 }
 
-function updateBookIndexes() {
-  for (let index = 0; index < myLibrary.length; index++) {
-    const book = myLibrary[index];
-    book.indexInLibrary = index;
-  }
-}
-
-function checkUserCancellation(userInput) {
-  return userInput === null;
-}
-
 function clearScreen() {
   const bookContainerDiv = document.querySelector(".books-container");
   while (bookContainerDiv.firstChild) {
     bookContainerDiv.removeChild(bookContainerDiv.firstChild);
   }
 }
+
+let library = new Library([]);
 
 let kimetsuNoYaibaVolume1 = new Book(
   "Demon Slayer: Kimetsu no Yaiba, Vol. 1",
@@ -271,10 +281,10 @@ let kimetsuNoYaibaVolume2 = new Book(
   true
 );
 kimetsuNoYaibaVolume2.indexInLibrary = 4;
-myLibrary.push(kimetsuNoYaibaVolume1);
-myLibrary.push(eightySixVolume4);
-myLibrary.push(eightySixVolume5);
-myLibrary.push(eightySixVolume6);
-myLibrary.push(kimetsuNoYaibaVolume2);
+library.bookCollection.push(kimetsuNoYaibaVolume1);
+library.bookCollection.push(eightySixVolume4);
+library.bookCollection.push(eightySixVolume5);
+library.bookCollection.push(eightySixVolume6);
+library.bookCollection.push(kimetsuNoYaibaVolume2);
 
-displayMyLibrary();
+library.display();
