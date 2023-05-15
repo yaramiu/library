@@ -19,8 +19,12 @@ body {
   text-align: center;
 }
 
-.title {
+.title,
+.author {
   overflow: auto;
+}
+
+.title {
   height: 40px;
 }
 
