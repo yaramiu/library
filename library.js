@@ -32,86 +32,7 @@ class Library {
   }
 
   addBook() {
-    const inputValidator = new InputValidator();
-
-    const userBookTitleInput = prompt(
-      "What is the title of the book you want to add?"
-    );
-    let hasCancelled = inputValidator.checkUserCancellation(userBookTitleInput);
-    if (hasCancelled) {
-      return;
-    }
-
-    let userBookAuthorInput = prompt("Who is the author of that book?");
-    hasCancelled = inputValidator.checkUserCancellation(userBookAuthorInput);
-    if (hasCancelled) {
-      return;
-    }
-    while (!inputValidator.isBookAuthorInputValid(userBookAuthorInput)) {
-      userBookAuthorInput = prompt(
-        "That is not a valid author name. Please use only alphabetical characters when inputting the author's name"
-      );
-      hasCancelled = inputValidator.checkUserCancellation(userBookAuthorInput);
-      if (hasCancelled) {
-        return;
-      }
-    }
-
-    let userBookPagesInput = prompt("How many pages does it have?");
-    hasCancelled = inputValidator.checkUserCancellation(userBookPagesInput);
-    if (hasCancelled) {
-      return;
-    }
-    while (!inputValidator.isBookPagesInputValid(userBookPagesInput)) {
-      userBookPagesInput = prompt(
-        "That is not a valid page number. Please re-enter the number of pages the book has"
-      );
-      hasCancelled = inputValidator.checkUserCancellation(userBookPagesInput);
-      if (hasCancelled) {
-        return;
-      }
-    }
-
-    let userBookReadInput = prompt("Did you read this book yet?");
-    hasCancelled = inputValidator.checkUserCancellation(userBookReadInput);
-    if (hasCancelled) {
-      return;
-    }
-    while (!inputValidator.isBookReadInputValid(userBookReadInput)) {
-      userBookReadInput = prompt(
-        "That is not a valid answer. Please enter Yes/yes/Y/y or No/no/N/n"
-      );
-      hasCancelled = inputValidator.checkUserCancellation(userBookReadInput);
-      if (hasCancelled) {
-        return;
-      }
-    }
-
-    let hasUserReadBook;
-    if (
-      userBookReadInput === "Yes" ||
-      userBookReadInput === "yes" ||
-      userBookReadInput === "Y" ||
-      userBookReadInput === "y"
-    ) {
-      hasUserReadBook = true;
-    } else if (
-      userBookReadInput === "No" ||
-      userBookReadInput === "no" ||
-      userBookReadInput === "N" ||
-      userBookReadInput === "n"
-    ) {
-      hasUserReadBook = false;
-    }
-
-    const book = new Book(
-      userBookTitleInput,
-      userBookAuthorInput,
-      Number(userBookPagesInput),
-      hasUserReadBook
-    );
-    book.indexInLibrary = this.bookCollection.length;
-    this.bookCollection.push(book);
+    screen.showInputForm();
   }
 
   displayBooks() {
@@ -246,6 +167,116 @@ class Screen {
     while (bookContainerDiv.firstChild) {
       bookContainerDiv.removeChild(bookContainerDiv.firstChild);
     }
+  }
+
+  showInputForm() {
+    const userInputForm = document.createElement("form");
+    userInputForm.action = "index.html";
+
+    const bookTitleLabel = document.createElement("label");
+    bookTitleLabel.for = "book_title";
+    bookTitleLabel.textContent = "Book Title: ";
+    const bookTitleInput = document.createElement("input");
+    bookTitleInput.type = "text";
+    bookTitleInput.id = "book_title";
+    bookTitleInput.name = "book_title";
+
+    const bookAuthorLabel = document.createElement("label");
+    bookAuthorLabel.for = "book_author";
+    bookAuthorLabel.textContent = "Book Author: ";
+    const bookAuthorInput = document.createElement("input");
+    bookAuthorInput.type = "text";
+    bookAuthorInput.id = "book_author";
+    bookAuthorInput.name = "book_author";
+
+    const bookPagesLabel = document.createElement("label");
+    bookPagesLabel.for = "book_pages";
+    bookPagesLabel.textContent = "Number of pages: ";
+    const bookPagesInput = document.createElement("input");
+    bookPagesInput.type = "num";
+    bookPagesInput.id = "book_pages";
+    bookPagesInput.name = "book_pages";
+
+    const readStatusDiv = document.createElement("div");
+    readStatusDiv.classList.add("read-status");
+
+    const readStatusParagraph = document.createElement("p");
+    readStatusParagraph.textContent = "Have you read this book yet?";
+    const yesInput = document.createElement("input");
+
+    yesInput.type = "radio";
+    yesInput.id = "yes";
+    yesInput.name = "read_status";
+    yesInput.value = "Yes";
+    const yesLabel = document.createElement("label");
+    yesLabel.for = "yes";
+    yesLabel.name = "read_status";
+    yesLabel.textContent = "Yes";
+
+    const noInput = document.createElement("input");
+    noInput.type = "radio";
+    noInput.id = "no";
+    noInput.name = "read_status";
+    noInput.value = "No";
+    const noLabel = document.createElement("label");
+    noLabel.for = "no";
+    noLabel.name = "read_status";
+    noLabel.textContent = "No";
+
+    readStatusDiv.appendChild(readStatusParagraph);
+    readStatusDiv.appendChild(yesInput);
+    readStatusDiv.appendChild(yesLabel);
+    readStatusDiv.appendChild(noInput);
+    readStatusDiv.appendChild(noLabel);
+
+    const submitButton = document.createElement("button");
+    submitButton.type = "button";
+    submitButton.textContent = "Submit";
+    submitButton.addEventListener("click", () => {
+      let checkedOption;
+      const radioButtons = document.querySelectorAll(
+        'input[name="read_status"]'
+      );
+      Array.from(radioButtons).forEach((radioButton) => {
+        if (radioButton.checked) {
+          checkedOption = radioButton.value;
+        }
+      });
+      let readStatus = false;
+      if (checkedOption === "Yes") {
+        readStatus = true;
+      }
+
+      const book = new Book(
+        bookTitleInput.value,
+        bookAuthorInput.value,
+        bookPagesInput.value,
+        readStatus
+      );
+      library.bookCollection.push(book);
+      book.indexInLibrary = library.bookCollection.length - 1;
+
+      document.querySelector("body").removeChild(userInputForm);
+
+      screen.clear();
+      library.displayBooks();
+    });
+
+    let elements = [
+      bookTitleLabel,
+      bookTitleInput,
+      bookAuthorLabel,
+      bookAuthorInput,
+      bookPagesLabel,
+      bookPagesInput,
+      readStatusDiv,
+      submitButton,
+    ];
+    elements.forEach((element) => {
+      userInputForm.appendChild(element);
+    });
+
+    document.querySelector("body").appendChild(userInputForm);
   }
 }
 

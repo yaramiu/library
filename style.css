@@ -79,3 +79,18 @@ body {
 .toggle-reading-status-button.not-read {
   background: url(./icons/toggle-switch-off.svg);
 }
+
+form {
+  display: grid;
+  width: 50%;
+  position: absolute;
+  bottom: 50%;
+  left: 23%;
+  height: 20rem;
+  background-color: orange;
+  place-items: center;
+}
+
+form > * {
+  width: 50%;
+}
