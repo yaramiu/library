@@ -91,27 +91,6 @@ class Library {
   }
 }
 
-class InputValidator {
-  isBookAuthorInputValid(userBookAuthorInput) {
-    return userBookAuthorInput.match(/^[A-Za-z ]+$/);
-  }
-
-  isBookPagesInputValid(userBookPagesInput) {
-    return userBookPagesInput.match(/^[0-9]+$/);
-  }
-
-  isBookReadInputValid(userBookReadInput) {
-    return (
-      userBookReadInput.match(/^[Yy](es)?$/) ||
-      userBookReadInput.match(/^[Nn]o?$/)
-    );
-  }
-
-  checkUserCancellation(userInput) {
-    return userInput === null;
-  }
-}
-
 class ButtonHelper {
   constructor() {
     const newBookButton = document.querySelector(".new-book-button");
@@ -171,7 +150,6 @@ class Screen {
 
   showInputForm() {
     const userInputForm = document.createElement("form");
-    userInputForm.action = "index.html";
 
     const bookTitleLabel = document.createElement("label");
     bookTitleLabel.for = "book_title";
@@ -180,6 +158,7 @@ class Screen {
     bookTitleInput.type = "text";
     bookTitleInput.id = "book_title";
     bookTitleInput.name = "book_title";
+    bookTitleInput.required = "true";
 
     const bookAuthorLabel = document.createElement("label");
     bookAuthorLabel.for = "book_author";
@@ -188,6 +167,7 @@ class Screen {
     bookAuthorInput.type = "text";
     bookAuthorInput.id = "book_author";
     bookAuthorInput.name = "book_author";
+    bookAuthorInput.required = "true";
 
     const bookPagesLabel = document.createElement("label");
     bookPagesLabel.for = "book_pages";
@@ -196,6 +176,7 @@ class Screen {
     bookPagesInput.type = "num";
     bookPagesInput.id = "book_pages";
     bookPagesInput.name = "book_pages";
+    bookPagesInput.required = "true";
 
     const readStatusDiv = document.createElement("div");
     readStatusDiv.classList.add("read-status");
@@ -208,6 +189,7 @@ class Screen {
     yesInput.id = "yes";
     yesInput.name = "read_status";
     yesInput.value = "Yes";
+    yesInput.required = "true";
     const yesLabel = document.createElement("label");
     yesLabel.for = "yes";
     yesLabel.name = "read_status";
@@ -218,6 +200,7 @@ class Screen {
     noInput.id = "no";
     noInput.name = "read_status";
     noInput.value = "No";
+    noInput.required = "true";
     const noLabel = document.createElement("label");
     noLabel.for = "no";
     noLabel.name = "read_status";
@@ -230,9 +213,24 @@ class Screen {
     readStatusDiv.appendChild(noLabel);
 
     const submitButton = document.createElement("button");
-    submitButton.type = "button";
+    submitButton.type = "submit";
     submitButton.textContent = "Submit";
-    submitButton.addEventListener("click", () => {
+
+    let elements = [
+      bookTitleLabel,
+      bookTitleInput,
+      bookAuthorLabel,
+      bookAuthorInput,
+      bookPagesLabel,
+      bookPagesInput,
+      readStatusDiv,
+      submitButton,
+    ];
+    elements.forEach((element) => {
+      userInputForm.appendChild(element);
+    });
+
+    userInputForm.addEventListener("submit", (event) => {
       let checkedOption;
       const radioButtons = document.querySelectorAll(
         'input[name="read_status"]'
@@ -256,27 +254,12 @@ class Screen {
       library.bookCollection.push(book);
       book.indexInLibrary = library.bookCollection.length - 1;
 
-      document.querySelector("body").removeChild(userInputForm);
-
+      document.body.removeChild(userInputForm);
       screen.clear();
       library.displayBooks();
     });
 
-    let elements = [
-      bookTitleLabel,
-      bookTitleInput,
-      bookAuthorLabel,
-      bookAuthorInput,
-      bookPagesLabel,
-      bookPagesInput,
-      readStatusDiv,
-      submitButton,
-    ];
-    elements.forEach((element) => {
-      userInputForm.appendChild(element);
-    });
-
-    document.querySelector("body").appendChild(userInputForm);
+    document.body.appendChild(userInputForm);
   }
 }
 
