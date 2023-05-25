@@ -173,10 +173,21 @@ class Screen {
     bookPagesLabel.for = "book_pages";
     bookPagesLabel.textContent = "Number of pages: ";
     const bookPagesInput = document.createElement("input");
-    bookPagesInput.type = "num";
+    bookPagesInput.type = "number";
     bookPagesInput.id = "book_pages";
     bookPagesInput.name = "book_pages";
     bookPagesInput.required = "true";
+    bookPagesInput.min = 1;
+    bookPagesInput.pattern = "d+";
+    bookPagesInput.addEventListener("input", () => {
+      if (bookPagesInput.validity.rangeUnderflow) {
+        bookPagesInput.setCustomValidity("Book pages must be positive");
+      } else if (bookPagesInput.validity.patternMismatch) {
+        bookPagesInput.setCustomValidity("Book pages can only contain numbers");
+      } else {
+        bookPagesInput.setCustomValidity("");
+      }
+    });
 
     const readStatusDiv = document.createElement("div");
     readStatusDiv.classList.add("read-status");
